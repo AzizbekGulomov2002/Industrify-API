@@ -1,43 +1,48 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
-
-from apps.app.pagination import BasePagination
 from .models import Category, Product, Order, OrderItem
 from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, OrderItemSerializer
 from .filters import ProductFilter, CategoryFilter, OrderFilter, OrderItemFilter
+from .pagination import BasePagination
+from rest_framework.permissions import IsAuthenticated
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filterset_class = CategoryFilter
-    pagination_class = BasePagination
     search_fields = ['name', 'description']
     ordering_fields = ['name', 'id']
+    pagination_class = BasePagination
 
 class ProductViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filterset_class = ProductFilter
-    pagination_class = BasePagination
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'name', 'id']
+    pagination_class = BasePagination
 
 class OrderViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filterset_class = OrderFilter
-    pagination_class = BasePagination
     ordering_fields = ['created_at', 'updated_at', 'id']
+    pagination_class = BasePagination
 
 class OrderItemViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filterset_class = OrderItemFilter
-    pagination_class = BasePagination
     search_fields = ['product__name']
     ordering_fields = ['quantity', 'price', 'id']
+    pagination_class = BasePagination

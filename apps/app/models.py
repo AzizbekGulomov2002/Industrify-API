@@ -8,11 +8,11 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    image_url = models.URLField(max_length=500, blank=True, null=True)  # URL field for images
 
     def __str__(self):
         return self.name
@@ -20,6 +20,7 @@ class Product(models.Model):
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"Order {self.id}"
@@ -31,4 +32,4 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
+        return f"OrderItem {self.id}"
