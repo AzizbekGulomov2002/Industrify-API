@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
-from .models import Category, Product, Order, OrderItem
-from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, OrderItemSerializer
+from .models import Category, Product, Order, OrderItem,Customer,Review
+from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, OrderItemSerializer,CustomerSerializer,ReviewSerializer
 from .filters import ProductFilter, CategoryFilter, OrderFilter, OrderItemFilter
 from .pagination import BasePagination
 from rest_framework.permissions import IsAuthenticated
@@ -46,3 +46,19 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     search_fields = ['product__name']
     ordering_fields = ['quantity', 'price', 'id']
     pagination_class = BasePagination
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    pagination_class = BasePagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['name', 'email']
+    ordering_fields = ['name', 'email']
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    pagination_class = BasePagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['customer__name', 'product__name', 'comment']
+    ordering_fields = ['rating', 'created_at']

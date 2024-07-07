@@ -33,3 +33,22 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"OrderItem {self.id}"
+
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    profile_image = models.URLField(max_length=200)
+    def __str__(self):
+        return self.name
+
+class Review(models.Model):
+    customer = models.ForeignKey(Customer, related_name='reviews', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
+    rating = models.DecimalField(max_digits=3, decimal_places=2)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'Review by {self.customer.name} for {self.product.name}'
+
